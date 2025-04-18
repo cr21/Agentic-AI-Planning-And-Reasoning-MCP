@@ -530,4 +530,5 @@ CHECK
 - ⚙️ [ReAct: Reasoning + Acting (Yao et al., 2022)](https://openreview.net/pdf?id=WE_vluYUL-X)  
 - 🎯 [Prompting 101 – Notion Guide](https://datareporting.notion.site/Prompting-101-1c30e122af9180f690ebe50f93fb4d0f)  
 - 🔍 [Transformer Circuits Explorer](https://transformer-circuits.pub)
+- 📖 [The-School-of-AI](https://theschoolof.ai)
 
