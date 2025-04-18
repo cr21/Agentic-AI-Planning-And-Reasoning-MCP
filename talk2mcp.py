@@ -59,7 +59,7 @@ async def main():
         print("Establishing connection to MCP server...")
         server_params = StdioServerParameters(
             command="python",
-            args=["mcp_server.py"]
+            args=["example2-3.py"]
         )
 
         async with stdio_client(server_params) as (read, write):
@@ -148,6 +148,39 @@ FUNCATION_CALL: open_powerpoint_and_add_text_gui|Sum of 5 and 3|8
 AUTOMATION_DONE
 """
                 
+#                 system_prompt = f"""You are a math agent solving problems in iterations. You have access to various mathematical tools.
+
+# Available tools:
+# {tools_description}
+
+# You must respond with EXACTLY ONE line in one of these formats (no additional text):
+# 1. For function calls:
+#    FUNCTION_CALL: function_name|param1|param2|...
+   
+# 2. For final answers:
+#    FINAL_ANSWER: [number]
+
+# 3. For GUI calls:
+#    GUI_CALL: function_name|param1|param2|...
+
+
+# Important:
+# - When a function returns multiple values, you need to process all of them
+# - Only give FINAL_ANSWER when you have completed all necessary calculations
+# - Once you gave FINAL_ANSWER, Then You should give GUI_CALL with appropriate parameters
+# - Do not repeat FINAL_ANSWER more than once
+# - Do not repeat GUI_CALL more than once
+# - Do not repeat function calls with the same parameters
+
+# Examples:
+# - FUNCTION_CALL: add|5|3
+# - FUNCTION_CALL: strings_to_chars_to_int|INDIA
+# - FINAL_ANSWER: [42]
+# - GUI_CALL: open_powerpoint_and_add_text_gui|query|FINAL_ANSWER
+# - AUTOMATION_DONE:
+
+# DO NOT include any explanations or additional text.
+# Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER: or GUI_CALL: or AUTOMATION_DONE:"""
 
                 #query = """Find the ASCII values of characters in INDIA and then return sum of exponentials of those values. """
                 query = """Add all prime numbers between 100 and 110 add maximum 10 numbers only if there are more than 10 prime numbers"""
@@ -309,57 +342,6 @@ AUTOMATION_DONE
                             import traceback
                             traceback.print_exc()
                             iteration_response.append(f"Error in iteration {iteration + 1}: {str(e)}")
-                            break
-
-                    elif response_text.startswith("GUI_CALL:") or "GUI_CALL:" in response_text:
-                        _, function_info = response_text.split(":", 1)
-                        parts = [p.strip() for p in function_info.split("|")]
-                        func_name, params = parts[0], parts[1:]
-                        print(f"LLM response: {response_text}")
-                        try:
-                            # Find the matching tool
-                            tool = next((t for t in tools if t.name == func_name), None)
-                            if not tool:
-                                raise ValueError(f"Unknown tool: {func_name}")
-
-                            # Prepare arguments
-                            arguments = {}
-                            schema_properties = tool.inputSchema.get('properties', {})
-                            
-                            for param_name, param_info in schema_properties.items():
-                                if not params:
-                                    raise ValueError(f"Not enough parameters provided for {func_name}")
-                                value = params.pop(0)
-                                arguments[param_name] = str(value)  # GUI calls typically use string params
-
-                            # Call the GUI tool
-                            print(f"Calling GUI tool: {func_name} with arguments: {arguments}")
-                            result = await session.call_tool(func_name, arguments=arguments)
-                            print(f"GUI action completed: {result}")
-                            # Get the full result content
-                            if hasattr(result, 'content'):
-                                print(f"DEBUG: Result has content attribute")
-                                # Handle multiple content items
-                                if isinstance(result.content, list):
-                                    iteration_result = [
-                                        item.text if hasattr(item, 'text') else str(item)
-                                        for item in result.content
-                                    ]   
-                                else:
-                                    iteration_result = str(result.content)
-                            else:
-                                print(f"DEBUG: Result has no content attribute")
-                                iteration_result = str(result)
-
-                            iteration_response.append(
-                                f"In the {iteration + 1} iteration you called {func_name} with {arguments} parameters, "
-                                f"and the function returned {iteration_result}."
-                            )
-                            last_response = iteration_result
-                            break
-
-                        except Exception as e:
-                            print(f"Error in GUI call: {str(e)}")
                             break
 
                     elif response_text.startswith("AUTOMATION_DONE:"):
