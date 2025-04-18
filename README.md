@@ -273,7 +273,250 @@ The system will initiate the client-server connection and start processing mathe
 - The system processes each query in multiple iterations, updating the query based on previous responses. The agent continues iterating until the task is complete.
 
 ---
+```
+System prompt:
 
+"""You are a math agent solving problems in iterations. You must think step-by-step and verify your logic before taking action. You have access to various mathematical tools.
+
+Available tools:
+{tools_description}
+
+Response Rules:
+- Start every solution with THINK: followed by a step-by-step breakdown of the logic.
+- After reasoning, verify your computation with CHECK: to validate intermediate results.
+- Use FUNCTION_CALL only after THINK and CHECK steps.
+- If unsure about a value or an error occurs, respond with FALLBACK: followed by the reason.
+- Final result must be shown only once using FINAL_ANSWER.
+- Once Final Answer is given, Tale Tool action to post answer on the screen.
+- Do not repeat FUNCTION_CALLs with the same parameters.
+- End the task with AUTOMATION_DONE.
+
+Valid Output Formats (respond using one per line in the following format):
+- THINK: step-by-step reasoning and plan  
+- CHECK: intermediate result validation or sanity check  
+- FUNCTION_CALL: function_name|param1|param2|...  
+- FALLBACK: [reason for uncertainty or tool failure]  
+- FINAL_ANSWER: [number or result] 
+- AUTOMATION_DONE
+
+Examples:
+THINK: To find the sum of 5 and 3, I need to use the add function.
+CHECK: 5 + 3 = 8, which looks correct.
+FUNCTION_CALL: add|5|3  
+FINAL_ANSWER: [8]  
+FUNCATION_CALL: open_powerpoint_and_add_text_gui|Sum of 5 and 3|8  
+AUTOMATION_DONE
+"""
+```
+
+---
+LLM Response: When we ran `python3 talk2mcp.py`
+
+---
+```
+Starting main execution...
+Establishing connection to MCP server...
+Connection established, creating session...
+Session created, initializing...
+Requesting tool list...
+[04/18/25 17:20:23] INFO     Processing request of type ListToolsRequest                            server.py:534
+Successfully retrieved 21 tools
+Creating system prompt...
+Number of tools: 21
+Added description for tool: 1. is_prime(n: integer) - Check if a number is prime
+Added description for tool: 2. add(a: integer, b: integer) - Add two numbers
+Added description for tool: 3. add_list(l: array) - Add all numbers in a list
+Added description for tool: 4. subtract(a: integer, b: integer) - Subtract two numbers
+Added description for tool: 5. multiply(a: integer, b: integer) - Multiply two numbers
+Added description for tool: 6. divide(a: integer, b: integer) - Divide two numbers
+Added description for tool: 7. power(a: integer, b: integer) - Power of two numbers
+Added description for tool: 8. sqrt(a: integer) - Square root of a number
+Added description for tool: 9. cbrt(a: integer) - Cube root of a number
+Added description for tool: 10. factorial(a: integer) - factorial of a number
+Added description for tool: 11. log(a: integer) - log of a number
+Added description for tool: 12. remainder(a: integer, b: integer) - remainder of two numbers divison
+Added description for tool: 13. sin(a: integer) - sin of a number
+Added description for tool: 14. cos(a: integer) - cos of a number
+Added description for tool: 15. tan(a: integer) - tan of a number
+Added description for tool: 16. mine(a: integer, b: integer) - special mining tool
+Added description for tool: 17. create_thumbnail(image_path: string) - Create a thumbnail from an image
+Added description for tool: 18. strings_to_chars_to_int(string: string) - Return the ASCII values of the characters in a word
+Added description for tool: 19. int_list_to_exponential_sum(int_list: array) - Return sum of exponentials of numbers in a list
+Added description for tool: 20. fibonacci_numbers(n: integer) - Return the first n Fibonacci Numbers
+Added description for tool: 21. open_powerpoint_and_add_text_gui(title: string, text: string) - Open PowerPoint GUI first and then add Title and text to a new slide using AppleScript
+Successfully created tools description
+Created system prompt...
+Starting iteration loop...
+
+--- Iteration 1 ---
+Preparing to generate LLM response...
+Starting LLM generation...
+LLM generation completed
+LLM Response: THINK: First, I need to identify all prime numbers between 100 and 110. A prime number is a number greater than 1 that has no positive divisors other than 1 and itself. I will check each number between 100 and 110 for primality.
+
+CHECK:
+- 100 is divisible by 2, 4, 5, 10, etc., so it is not prime.
+- 101 is not divisible by any number from 2 to 10, so it is prime.
+- 102 is divisible by 2, so it is not prime.
+- 103 is not divisible by any number from 2 to 10, so it is prime.
+- 104 is divisible by 2, so it is not prime.
+- 105 is divisible by 3 and 5, so it is not prime.
+- 106 is divisible by 2, so it is not prime.
+- 107 is not divisible by any number from 2 to 10, so it is prime.
+- 108 is divisible by 2, so it is not prime.
+- 109 is not divisible by any number from 2 to 10, so it is prime.
+- 110 is divisible by 2 and 5, so it is not prime.
+
+The prime numbers between 100 and 110 are 101, 103, 107, and 109. There are 4 prime numbers which is less than 10. Now, I need to add these prime numbers together.
+
+CHECK: 101 + 103 + 107 + 109 = 420
+FUNCTION_CALL: add|101|103|107|109
+FINAL_ANSWER: [420]
+FUNCTION_CALL: open_powerpoint_and_add_text_gui|Sum of prime numbers between 100 and 110|420
+AUTOMATION_DONE
+
+DEBUG: Raw function info:  add|101|103|107|109
+DEBUG: Split parts: ['add', '101', '103', '107', '109']
+DEBUG: Function name: add
+DEBUG: Raw parameters: ['101', '103', '107', '109']
+DEBUG: Found tool: add
+DEBUG: Tool schema: {'properties': {'a': {'title': 'A', 'type': 'integer'}, 'b': {'title': 'B', 'type': 'integer'}}, 'required': ['a', 'b'], 'title': 'addArguments', 'type': 'object'}
+DEBUG: Schema properties: {'a': {'title': 'A', 'type': 'integer'}, 'b': {'title': 'B', 'type': 'integer'}}
+DEBUG: Converting parameter a with value 101 to type integer
+DEBUG: Converting parameter b with value 103 to type integer
+DEBUG: Final arguments: {'a': 101, 'b': 103}
+DEBUG: Calling tool add
+[04/18/25 17:20:25] INFO     Processing request of type CallToolRequest                             server.py:534
+DEBUG: Raw result: meta=None content=[TextContent(type='text', text='204', annotations=None)] isError=False
+DEBUG: Result has content attribute
+DEBUG: Final iteration result: ['204']
+
+--- Iteration 2 ---
+Preparing to generate LLM response...
+Starting LLM generation...
+LLM generation completed
+LLM Response: THINK: The problem asks to add all prime numbers between 100 and 110. I have already identified 101 and 103 as primes and added them in the previous iteration, resulting in 204. I need to check for other prime numbers between 100 and 110. The numbers in that range are 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, and 110. We know 101 and 103 are primes.
+
+100 is divisible by 2, 4, 5, 10, 20, 25, 50.
+102 is divisible by 2, 3, 6, 17, 34, 51.
+104 is divisible by 2, 4, 8, 13, 26, 52.
+105 is divisible by 3, 5, 7, 15, 21, 35.
+106 is divisible by 2, 53.
+107 is prime.
+108 is divisible by 2, 3, 4, 6, 9, 12, 18, 27, 36, 54.
+109 is prime.
+110 is divisible by 2, 5, 10, 11, 22, 55.
+
+So the prime numbers between 100 and 110 are 101, 103, 107, and 109. I have already added 101 and 103. I need to add 107 and 109 to the running total of 204.
+
+CHECK: The prime numbers between 100 and 110 are 101, 103, 107, and 109. 204 + 107 + 109 = 420.
+
+FUNCTION_CALL: add|204|107
+
+DEBUG: Raw function info:  add|204|107
+DEBUG: Split parts: ['add', '204', '107']
+DEBUG: Function name: add
+DEBUG: Raw parameters: ['204', '107']
+DEBUG: Found tool: add
+DEBUG: Tool schema: {'properties': {'a': {'title': 'A', 'type': 'integer'}, 'b': {'title': 'B', 'type': 'integer'}}, 'required': ['a', 'b'], 'title': 'addArguments', 'type': 'object'}
+DEBUG: Schema properties: {'a': {'title': 'A', 'type': 'integer'}, 'b': {'title': 'B', 'type': 'integer'}}
+DEBUG: Converting parameter a with value 204 to type integer
+DEBUG: Converting parameter b with value 107 to type integer
+DEBUG: Final arguments: {'a': 204, 'b': 107}
+DEBUG: Calling tool add
+[04/18/25 17:20:28] INFO     Processing request of type CallToolRequest                             server.py:534
+DEBUG: Raw result: meta=None content=[TextContent(type='text', text='311', annotations=None)] isError=False
+DEBUG: Result has content attribute
+DEBUG: Final iteration result: ['311']
+
+--- Iteration 3 ---
+Preparing to generate LLM response...
+Starting LLM generation...
+LLM generation completed
+LLM Response: THINK: I need to determine the next prime number between 100 and 110 and add it to the current sum. The prime numbers between 100 and 110 are 101, 103, 107, and 109. I have already added 101, 103, and 107. The next prime number is 109. I will now add 109 to the current sum of 311.
+
+CHECK: The next prime number is 109, and the current sum is 311. Adding them together seems logical.
+FUNCTION_CALL: add|311|109
+
+DEBUG: Raw function info:  add|311|109
+DEBUG: Split parts: ['add', '311', '109']
+DEBUG: Function name: add
+DEBUG: Raw parameters: ['311', '109']
+DEBUG: Found tool: add
+DEBUG: Tool schema: {'properties': {'a': {'title': 'A', 'type': 'integer'}, 'b': {'title': 'B', 'type': 'integer'}}, 'required': ['a', 'b'], 'title': 'addArguments', 'type': 'object'}
+DEBUG: Schema properties: {'a': {'title': 'A', 'type': 'integer'}, 'b': {'title': 'B', 'type': 'integer'}}
+DEBUG: Converting parameter a with value 311 to type integer
+DEBUG: Converting parameter b with value 109 to type integer
+DEBUG: Final arguments: {'a': 311, 'b': 109}
+DEBUG: Calling tool add
+[04/18/25 17:20:29] INFO     Processing request of type CallToolRequest                             server.py:534
+DEBUG: Raw result: meta=None content=[TextContent(type='text', text='420', annotations=None)] isError=False
+DEBUG: Result has content attribute
+DEBUG: Final iteration result: ['420']
+
+--- Iteration 4 ---
+Preparing to generate LLM response...
+Starting LLM generation...
+LLM generation completed
+LLM Response: THINK: The problem asks me to add all prime numbers between 100 and 110, limiting to a maximum of 10 numbers. The prime numbers between 100 and 110 are 101, 103, 107, and 109. I have already added 101, 103, 107, and 109 in the previous iterations. Now I should provide the final answer.
+
+CHECK: The prime numbers between 100 and 110 are 101, 103, 107, and 109. The sum is 101 + 103 + 107 + 109 = 420. The previous iterations correctly computed the sum.
+
+FINAL_ANSWER: [420]
+AUTOMATION_DONE
+FINAL_ANSWER: 1. The problem asks me to add all prime numbers between 100 and 110, limiting to a maximum of 10 numbers. The prime numbers between 100 and 110 are 101, 103, 107, and 109. I have already added 101, 103, 107, and 109 in the previous iterations. Now I should provide the final answer.
+
+CHECK
+
+--- Iteration 5 ---
+Preparing to generate LLM response...
+Starting LLM generation...
+LLM generation completed
+LLM Response: THINK: I have identified all prime numbers between 100 and 110 and added them. I have reached the final result.
+CHECK: The prime numbers between 100 and 110 are 101, 103, 107, and 109. Their sum is 420.
+FINAL_ANSWER: [420]
+AUTOMATION_DONE
+FINAL_ANSWER: 1. I have identified all prime numbers between 100 and 110 and added them. I have reached the final result.
+CHECK
+
+--- Iteration 6 ---
+Preparing to generate LLM response...
+Starting LLM generation...
+LLM generation completed
+LLM Response: THINK: I have identified all the prime numbers between 100 and 110 (101, 103, 107, 109) and added them in previous iterations. The sum is currently 420. I now need to provide the final answer.
+CHECK: The prime numbers between 100 and 110 are 101, 103, 107, and 109. Their sum is 101 + 103 + 107 + 109 = 420.
+FINAL_ANSWER: [420]
+FUNCTION_CALL: open_powerpoint_and_add_text_gui|Sum of prime numbers between 100 and 110|420
+AUTOMATION_DONE
+
+DEBUG: Raw function info:  open_powerpoint_and_add_text_gui|Sum of prime numbers between 100 and 110|420
+DEBUG: Split parts: ['open_powerpoint_and_add_text_gui', 'Sum of prime numbers between 100 and 110', '420']
+DEBUG: Function name: open_powerpoint_and_add_text_gui
+DEBUG: Raw parameters: ['Sum of prime numbers between 100 and 110', '420']
+DEBUG: Found tool: open_powerpoint_and_add_text_gui
+DEBUG: Tool schema: {'properties': {'title': {'title': 'Title', 'type': 'string'}, 'text': {'title': 'Text', 'type': 'string'}}, 'required': ['title', 'text'], 'title': 'open_powerpoint_and_add_text_guiArguments', 'type': 'object'}
+DEBUG: Schema properties: {'title': {'title': 'Title', 'type': 'string'}, 'text': {'title': 'Text', 'type': 'string'}}
+DEBUG: Converting parameter title with value Sum of prime numbers between 100 and 110 to type string
+DEBUG: Converting parameter text with value 420 to type string
+DEBUG: Final arguments: {'title': 'Sum of prime numbers between 100 and 110', 'text': '420'}
+DEBUG: Calling tool open_powerpoint_and_add_text_gui
+[04/18/25 17:20:32] INFO     Processing request of type CallToolRequest                             server.py:534
+DEBUG: Raw result: meta=None content=[TextContent(type='text', text='{"content": [{"type": "text", "text": "PowerPoint opened and text \'420\' added through GUI automation.", "annotations": null}]}', annotations=None)] isError=False
+DEBUG: Result has content attribute
+DEBUG: Final iteration result: ['{"content": [{"type": "text", "text": "PowerPoint opened and text \'420\' added through GUI automation.", "annotations": null}]}']
+
+--- Iteration 7 ---
+Preparing to generate LLM response...
+Starting LLM generation...
+LLM generation completed
+LLM Response: THINK: I have already identified the prime numbers between 100 and 110, added them together, and presented the final result. Now, I should indicate that the automation is complete.
+CHECK: The final answer is 420.
+FINAL_ANSWER: [420]
+AUTOMATION_DONE
+FINAL_ANSWER: 1. I have already identified the prime numbers between 100 and 110, added them together, and presented the final result. Now, I should indicate that the automation is complete.
+CHECK
+```
+---
 ## 🔧 How to Extend the System
 
 - **Adding new tools**: To add new tools, modify the `tools_description` and ensure the correct parameters are provided for the new tools.
