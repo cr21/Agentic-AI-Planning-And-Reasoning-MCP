@@ -148,39 +148,6 @@ FUNCATION_CALL: open_powerpoint_and_add_text_gui|Sum of 5 and 3|8
 AUTOMATION_DONE
 """
                 
-#                 system_prompt = f"""You are a math agent solving problems in iterations. You have access to various mathematical tools.
-
-# Available tools:
-# {tools_description}
-
-# You must respond with EXACTLY ONE line in one of these formats (no additional text):
-# 1. For function calls:
-#    FUNCTION_CALL: function_name|param1|param2|...
-   
-# 2. For final answers:
-#    FINAL_ANSWER: [number]
-
-# 3. For GUI calls:
-#    GUI_CALL: function_name|param1|param2|...
-
-
-# Important:
-# - When a function returns multiple values, you need to process all of them
-# - Only give FINAL_ANSWER when you have completed all necessary calculations
-# - Once you gave FINAL_ANSWER, Then You should give GUI_CALL with appropriate parameters
-# - Do not repeat FINAL_ANSWER more than once
-# - Do not repeat GUI_CALL more than once
-# - Do not repeat function calls with the same parameters
-
-# Examples:
-# - FUNCTION_CALL: add|5|3
-# - FUNCTION_CALL: strings_to_chars_to_int|INDIA
-# - FINAL_ANSWER: [42]
-# - GUI_CALL: open_powerpoint_and_add_text_gui|query|FINAL_ANSWER
-# - AUTOMATION_DONE:
-
-# DO NOT include any explanations or additional text.
-# Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER: or GUI_CALL: or AUTOMATION_DONE:"""
 
                 #query = """Find the ASCII values of characters in INDIA and then return sum of exponentials of those values. """
                 query = """Add all prime numbers between 100 and 110 add maximum 10 numbers only if there are more than 10 prime numbers"""
